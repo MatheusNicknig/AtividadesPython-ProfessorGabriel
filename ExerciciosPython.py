@@ -1,3 +1,4 @@
+#Peça ao usuário para digitar uma palavra e mostre quantas vogais ela tem
 #palavra = input("Digite uma palavra: ")
 #vogais = ["a", "e", "i", "o", "u"]  
 #contador = 0  
@@ -11,6 +12,7 @@
 
 #print(f"A palavra '{palavra}' tem {contador_vogais} vogais.")
 
+#Peça ao usuário para digitar 6 números e mostre apenas os números pares digitados
 #numero1 = int (input('Digite o primeiro número:'))
 #numero2 = int (input('Digite o segundo numero:'))
 #numero3 = int (input('Digite o terceiro número:'))
@@ -31,6 +33,7 @@
 #else:
  #   print("A lista não tem nenhum número par!")
 
+#Peça ao usuário para digitar 4 notas e faça a média delas
 #nota1 = float (input('Digite a primeira nota:'))
 #nota2 = float (input("Digite a segunda nota:"))
 #nota3 = float (input("Digite a terceir nota:"))
@@ -39,6 +42,7 @@
 
 #print(f"A média das notas é {média}")
 
+#Peça ao usuário para digitar o número de uma tabuada e faça ela do 1 ao 10
 numeroDaTabuada =int(input("Digite o número que quer saber a tabuada: "))
 
 for numero in range(1, 11):
