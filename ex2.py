@@ -1,3 +1,4 @@
+#Peça ao usuário para digitar dois números e verifique qual número é maior ou se os dois são iguais
 num1 = int (input('digite um número'))
 num2 = int (input('digite outro número'))
 if num1 > num2:
