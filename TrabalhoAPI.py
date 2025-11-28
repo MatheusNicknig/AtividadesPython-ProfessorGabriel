@@ -3,11 +3,13 @@ from pydantic import BaseModel, Field
 from typing import Dict, Optional
 import uuid
 
+
 app = FastAPI(
     title="API de Gerenciamento de Tarefas",
     description="API RESTful para gerenciar uma lista de tarefas (To-Do List)",
     version="1.0.0"
 )
+
 
 # Modelo de dados da Tarefa usando Pydantic
 class Tarefa(BaseModel):
@@ -15,26 +17,40 @@ class Tarefa(BaseModel):
     descricao: Optional[str] = Field(default=None, description="Descrição detalhada da tarefa")
     concluida: bool = Field(default=False, description="Status de conclusão da tarefa")
 
+
 # Modelo para atualização de tarefa
 class TarefaUpdate(BaseModel):
     titulo: Optional[str] = Field(None, min_length=3)
     descricao: Optional[str] = None
     concluida: Optional[bool] = None
 
+
 # "Banco de dados" em memória (um dicionário Python)
 db_tarefas: Dict[str, Tarefa] = {}
 
+
 # --- ENDPOINTS DA API ---
+
 
 @app.get("/")
 def read_root():
     """Endpoint raiz da API."""
     return {"message": "Bem-vindo à API de Gerenciamento de Tarefas! Acesse /docs para a documentação interativa."}
 
+
 @app.get("/tarefas", status_code=status.HTTP_200_OK)
 def listar_todas_tarefas():
     """Retorna todas as tarefas cadastradas."""
-    return list(db_tarefas.values())
+    resultado = []
+    for id_tarefa, tarefa in db_tarefas.items():
+        resultado.append({
+            "id": id_tarefa,
+            "titulo": tarefa.titulo,
+            "descricao": tarefa.descricao,
+            "concluida": tarefa.concluida
+        })
+    return resultado
+
 
 @app.get("/tarefas/{id}", status_code=status.HTTP_200_OK)
 def obter_tarefa_por_id(id: str):
@@ -44,7 +60,14 @@ def obter_tarefa_por_id(id: str):
             status_code=status.HTTP_404_NOT_FOUND, 
             detail="Tarefa não encontrada"
         )
-    return db_tarefas[id]
+    tarefa = db_tarefas[id]
+    return {
+        "id": id,
+        "titulo": tarefa.titulo,
+        "descricao": tarefa.descricao,
+        "concluida": tarefa.concluida
+    }
+
 
 @app.post("/tarefas", status_code=status.HTTP_201_CREATED)
 def criar_tarefa(tarefa_data: Tarefa):
@@ -57,7 +80,13 @@ def criar_tarefa(tarefa_data: Tarefa):
     )
     
     db_tarefas[idDaTarefa] = tarefa
-    return tarefa
+    return {
+        "id": idDaTarefa,
+        "titulo": tarefa.titulo,
+        "descricao": tarefa.descricao,
+        "concluida": tarefa.concluida
+    }
+
 
 @app.put("/tarefas/{id}", status_code=status.HTTP_200_OK)
 def atualizar_tarefa(id: str, tarefa_update: TarefaUpdate):
@@ -79,7 +108,13 @@ def atualizar_tarefa(id: str, tarefa_update: TarefaUpdate):
         tarefa_existente.concluida = tarefa_update.concluida
     
     db_tarefas[id] = tarefa_existente
-    return db_tarefas[id]
+    return {
+        "id": id,
+        "titulo": tarefa_existente.titulo,
+        "descricao": tarefa_existente.descricao,
+        "concluida": tarefa_existente.concluida
+    }
+
 
 @app.delete("/tarefas/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def deletar_tarefa(id: str):
@@ -91,4 +126,6 @@ def deletar_tarefa(id: str):
         )
     
     del db_tarefas[id]
+
+
     return None
